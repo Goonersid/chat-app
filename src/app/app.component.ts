@@ -8,5 +8,5 @@ import { Auth } from './auth.service';
 })
 export class AppComponent {
   title = 'G-Chat Dashboard!';
-  constructor(private auth: Auth) {}
+  constructor(public auth: Auth) {}
 }
