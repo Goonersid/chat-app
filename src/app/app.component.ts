@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Auth } from './auth.service';
 
 @Component({
@@ -6,7 +6,11 @@ import { Auth } from './auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'G-Chat Dashboard!';
-  constructor(public auth: Auth) {}
+export class AppComponent implements OnInit {
+  title:string;
+  constructor(public auth: Auth) {
+   }
+  ngOnInit(): void {
+    this.title = 'G-Chat Dashboard!';
+  }
 }

@@ -9,12 +9,32 @@
       </li>
 	</ul>
 	<ul class="navbar-nav">
-      <li class="nav-item">
-        <button type="button" class="btn btn-info" (click)="auth.login()" *ngIf="!auth.authenticated()">Log In</button>
+      <li class="nav-item" *ngIf="!auth.authenticated()">
+        <button type="button" class="btn btn-info" (click)="auth.login()" >
+        <i class="fa fa-sign-in" aria-hidden="true"></i> Log In</button>
       </li>
-      <li class="nav-item">
-        <button class="btn btn-info" (click)="auth.logout()" *ngIf="auth.authenticated()">Log Out</button>
+      <li class="nav-item" *ngIf="auth.authenticated() && auth.loggedInUser">
+      	<span class="navbar-text">
+	      Welcome, {{auth.loggedInUser.given_name| uppercase}}!!
+	    </span>
+        <button class="btn btn-info" (click)="auth.logout()">Log Out</button>
       </li>
     </ul>
     </div> 
 </nav>
+<div class ="container">
+	<div class="row justify-content-center" *ngIf="!auth.authenticated()">
+		<div class = "col col-md-auto gchat-mask" >
+		<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> 
+		Please <button type="button" class="btn btn-link gchat-login" (click)="auth.login()">login</button>to connect !!</div>
+	</div> 
+	<div class="row" *ngIf="auth.authenticated() && auth.loggedInUser"> 
+		<div class = "col-3" >Your Profile
+			<user-profile [user]="auth.loggedInUser">Initializing user profile..Please wait</user-profile>
+		</div>
+		<div class="col" >
+			<chat-users [currentUser]="auth.loggedInUser">Initializing Contact List..Please wait</chat-users>
+		</div>
+		<div class="col" >Chat</div> 
+	</div>
+</div>
