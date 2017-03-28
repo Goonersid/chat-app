@@ -21,7 +21,7 @@ export class ChatUsersComponent implements OnInit {
   // CSS classes: added/removed per current state of component properties
     return this.selectedUser && user.user_id==this.selectedUser.user_id?selectedUserClass:""
   }
-  constructor(private chatService: ChatUsersService) { }
+  constructor(public chatService: ChatUsersService) { }
   
   ngOnInit() {
     console.log("current user",this.currentUser);
