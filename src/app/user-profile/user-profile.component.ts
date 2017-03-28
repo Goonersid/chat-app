@@ -9,6 +9,6 @@ import { Component, Input } from '@angular/core';
 export class UserProfileComponent {
 
   constructor() { }
-    @Input() user: Object;
+    @Input() user: any;
 
 }

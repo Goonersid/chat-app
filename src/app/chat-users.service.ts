@@ -1,28 +1,38 @@
 
 import { myConfig } from './auth.config';
+import { Auth } from './auth.service';
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
-
+import { AuthHttp, JwtHelper } from 'angular2-jwt';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ChatUsersService {
   authToken : Object;
+  allUsers : any;
+  jwtHelper : JwtHelper;
   private usersUrl = myConfig.fetchUsersUrl;
-  constructor(private http: Http) { }
+  constructor(private auth:Auth,private http: Http, private authHttp: AuthHttp) { }
  getAllUsers(){
   return this.create()
         .then((token => {
           console.log(token);
+          localStorage.setItem('id_token',token.access_token)
           this.authToken = token;
-          let headers = new Headers({'Content-Type': 'application/json'});
-          headers.append("authentication","Bearer "+token['access_token'])
-          this.http.get(myConfig.fetchUsersUrl,{headers : headers}).toPromise()
-          .then(res => this.extractData)
-          .catch(this.handleError);
+          this.requestUsers(token);
         }));
  }
-
+  requestUsers(token){
+    return this.authHttp.get(this.usersUrl)
+      .map(res => res.json())
+      .subscribe(
+        data => this.allUsers= data,
+        error => this.allUsers = error._body || error
+      );
+    
+    
+  }
 
   create() {
     let headers = new Headers({'Content-Type': 'application/json'});

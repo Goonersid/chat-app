@@ -29,12 +29,11 @@
 		Please <button type="button" class="btn btn-link gchat-login" (click)="auth.login()">login</button>to connect !!</div>
 	</div> 
 	<div class="row" *ngIf="auth.authenticated() && auth.loggedInUser"> 
-		<div class = "col-3" >Your Profile
+		<div class = "col-3" ><h2>Your profile</h2>
 			<user-profile [user]="auth.loggedInUser">Initializing user profile..Please wait</user-profile>
 		</div>
 		<div class="col" >
 			<chat-users [currentUser]="auth.loggedInUser">Initializing Contact List..Please wait</chat-users>
 		</div>
-		<div class="col" >Chat</div> 
 	</div>
 </div>
