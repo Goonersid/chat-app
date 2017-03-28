@@ -2,8 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, Http, RequestOptions } from '@angular/http';
-import { AngularFireModule } from 'angularfire2';
-
 
 import { AppComponent } from './app.component';
 import { Auth } from './auth.service';
@@ -15,11 +13,11 @@ import {
 import { ChatUsersService } from './chat-users.service';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ChatUsersComponent } from './chat-users/chat-users.component';
-import { AuthHttp, AuthConfig } from 'angular2-jwt';
+import { provideAuth, AuthHttp, AuthConfig } from 'angular2-jwt';
 import { ChatRoomComponent } from './chat-room/chat-room.component';
 
-function authHttpServiceFactory(http: Http, options: RequestOptions) {
-  return new AuthHttp(new AuthConfig(), http, options);
+export function authHttpServiceFactory(http: Http, options: RequestOptions) {
+  return new AuthHttp( new AuthConfig({}), http, options);
 }
 
 @NgModule({
@@ -33,15 +31,15 @@ function authHttpServiceFactory(http: Http, options: RequestOptions) {
     BrowserModule,
     FormsModule,
     HttpModule,
-    routing,
-    NgbModule.forRoot()
-  ],
-  
-  providers: [Auth, appRoutingProviders, ChatUsersService, {
+    routing
+  ], 
+  providers: [Auth, appRoutingProviders, ChatUsersService,
+  {
     provide: AuthHttp,
       useFactory: authHttpServiceFactory,
       deps: [Http, RequestOptions]
-  }],
+  }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -3,7 +3,7 @@ import { myConfig } from './auth.config';
 import { Auth } from './auth.service';
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { AuthHttp, JwtHelper } from 'angular2-jwt';
+import { AuthHttp } from 'angular2-jwt';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
@@ -11,7 +11,6 @@ import 'rxjs/add/operator/toPromise';
 export class ChatUsersService {
   authToken : Object;
   allUsers : any;
-  jwtHelper : JwtHelper;
   private usersUrl = myConfig.fetchUsersUrl;
   constructor(private auth:Auth,private http: Http, private authHttp: AuthHttp) { }
  getAllUsers(){
@@ -45,7 +44,7 @@ export class ChatUsersService {
       .catch(this.handleError);
   }
   private extractData(res: Response) {
-    let body = res.json(); 
+    let body = res.json();
     return body;
   }
   private handleError(error: any): Promise<any> {
