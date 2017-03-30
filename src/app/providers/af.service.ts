@@ -22,8 +22,8 @@ export class AF {
    return this.af.auth.login({
       provider: AuthProviders.Google,
       method: AuthMethods.Redirect
-    }).catch((error)=>{
-        console.log(error);
+    }).catch(err =>{
+      console.log(err);
     });
   }
   updateUserStatus(status){

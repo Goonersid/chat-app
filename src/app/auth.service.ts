@@ -29,17 +29,17 @@ export class Auth {
 
                   this.isLoggedIn = false;
                   this.afService.loginWithGoogle().then((data) => {
-                    console.log(data);
+                    console.log("data 1",data);
                     this.afService.addUserInfo();
                   });
-                  
                 }
                 else {
                   console.log("Successfully Logged in.");
                   // Set the Display Name and Email so we can attribute messages to them
-                  this.afService.displayName = auth.google.displayName;
-                  this.afService.email = auth.google.email;
+                  this.afService.displayName = auth.google.displayName||auth.auth.displayName;
+                  this.afService.email = auth.google.displayName||auth.auth.email;
                   this.isLoggedIn = true;
+                  this.afService.addUserInfo();
                 }
               }
             );
@@ -51,7 +51,8 @@ export class Auth {
         }
         if(!this.isLoggedIn){
           this.afService.loginWithGoogle().then((data) => {
-                    console.log(data);
+                    
+                    console.log("data2",data);
                     this.afService.addUserInfo();
                   });
         }
