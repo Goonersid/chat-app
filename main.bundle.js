@@ -494,7 +494,7 @@ var AF = (function () {
     AF.prototype.loginWithGoogle = function () {
         return this.af.auth.login({
             provider: __WEBPACK_IMPORTED_MODULE_1_angularfire2__["b" /* AuthProviders */].Google,
-            method: __WEBPACK_IMPORTED_MODULE_1_angularfire2__["c" /* AuthMethods */].Redirect
+            method: __WEBPACK_IMPORTED_MODULE_1_angularfire2__["c" /* AuthMethods */].Popup
         }).catch(function (error) {
             console.log(error);
         });
