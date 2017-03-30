@@ -483,6 +483,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var AF = (function () {
     function AF(af) {
         this.af = af;
+        console.log("trying now");
         this.messages = this.af.database.list('messages');
         this.users = this.af.database.list('users');
     }
