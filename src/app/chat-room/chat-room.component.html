@@ -1,7 +1,21 @@
-<h5 *ngIf = "user">Your chat with {{user.nickname}}</h5>
-<form>
+<h5 *ngIf = "user">Your chat with {{user.displayName}}</h5>
 <div class="form-group">
-    <input type="text" class="form-control"  aria-describedby="chatHelp" placeholder="Click to start typing.."/>
+    <input type="text" class="form-control"  [(ngModel)]="user.chatmessage" (keyup.enter)="sendMessage()"
+    										 aria-describedby="chatHelp" placeholder="Click to start typing.."/>
     <small id="emailHelp" class="form-text text-muted">Press enter key to send your message</small>
 </div>
-</form> 
+<div id="chat-room">
+   <div class="list-group"  *ngFor="let message of messages | async">
+   	<a *ngIf="(message.to==afService.email && message.email==user.email)||
+   	 																(message.email==afService.email && message.to==user.email )"
+   			class="list-group-item list-group-item-action flex-column align-items-start">
+   							 
+   		<div class="d-flex w-100 justify-content-between">
+	      	<h5 class="mb-1" *ngIf= "message.email==afService.email">You:</h5>
+	      	<h5 class="mb-1" *ngIf= "message.to==afService.email">{{user.displayName}}:</h5>
+	      	<small>{{message.timestamp | date:"dd-MMM-yy hh:mm a"}}</small>
+	    </div>
+	    <p class="mb-1">{{message.message}}</p>
+   	</a>
+</div>
+</div> 

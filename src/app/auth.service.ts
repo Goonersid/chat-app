@@ -1,29 +1,59 @@
 
 import { myConfig } from './auth.config';
-import { Injectable }      from '@angular/core';
+import { AF } from './providers/af.service';
+import { Injectable } from '@angular/core';
 import { tokenNotExpired } from 'angular2-jwt';
-import * as firebase from "firebase";
-
-
 // Avoid name not found warnings
 declare var Auth0Lock: any;
 declare var Auth0: any;
+
 @Injectable()
 export class Auth {
   // Configure Auth0
 
   lock = new Auth0Lock(myConfig.clientID, myConfig.domain, {});
-  auth0 = new Auth0({ domain : myConfig.domain, clientID: myConfig.clientID})
-  
+  auth0 = new Auth0({ domain: myConfig.domain, clientID: myConfig.clientID })
+  isLoggedIn;
   loggedInUser: Object;
-  constructor() {
+  constructor(public afService: AF) {
     this.loggedInUser = JSON.parse(localStorage.getItem('profile'));
     // Add callback for lock `authenticated` event
+    var ctxt = this;
+    this.afService.af.auth.subscribe(
+              (auth) => {
+                if(auth == null && !ctxt.authenticated()){
+                  return;
+                }
+                else if (auth == null && this.authenticated()) {
+                  console.log("Not Logged in.");
+
+                  this.isLoggedIn = false;
+                  this.afService.loginWithGoogle().then((data) => {
+                    console.log(data);
+                    this.afService.addUserInfo();
+                  });
+                  
+                }
+                else {
+                  console.log("Successfully Logged in.");
+                  // Set the Display Name and Email so we can attribute messages to them
+                  this.afService.displayName = auth.google.displayName;
+                  this.afService.email = auth.google.email;
+                  this.isLoggedIn = true;
+                }
+              }
+            );
     this.lock.on("authenticated", (authResult) => {
-      this.lock.getUserInfo(authResult.accessToken, (error, profile)=> {
+      this.lock.getUserInfo(authResult.accessToken, (error, profile) => {
         if (error) {
           // Handle error
           return;
+        }
+        if(!this.isLoggedIn){
+          this.afService.loginWithGoogle().then((data) => {
+                    console.log(data);
+                    this.afService.addUserInfo();
+                  });
         }
         localStorage.setItem("accessToken", authResult.accessToken);
         localStorage.setItem("profile", JSON.stringify(profile));
@@ -32,34 +62,30 @@ export class Auth {
         
         // Set the options to retreive a firebase delegation token
         var options = {
-          id_token : authResult.idToken,
-          api : 'firebase',
-          "scope": "openid profile"
+          company: this.loggedInUser['firebase_data']['company'],
+          id_token: authResult.idToken,
+          api: 'firebase',
+          scope: "openid profile email"
         };
-        
         // Make a call to the Auth0 '/delegate'
-        this.auth0.getDelegationToken(options, function(err, result) {
-          if(!err) {
+        this.auth0.getDelegationToken(options, (err, result) => {
+          if (!err) {
+            
+            //we could do this or pass this token delegate to firebase.
+            //https://github.com/angular/angularfire2/issues/286
             // Exchange the delegate token for a Firebase auth token
-            firebase.auth().signInWithCustomToken(result.id_token).catch(function(error) {
-              if(!error){
-                // Retrieve Firebase Messaging object.
-                const messaging = firebase.messaging();
-                console.log(messaging);
-              }
-              else
-              console.log(error);
-              
-            });
+
+            
+            
           }
         });
-        
-        
+
       });
     });
   }
-  
-  
+
+
+
   public login() {
     // Call the show method to display the widget.
     this.lock.show();
@@ -70,14 +96,13 @@ export class Auth {
     // This searches for an item in localStorage with key == 'id_token'
     return tokenNotExpired();
   }
-  
-  public getUserProfile(){
+
+  public getUserProfile() {
     return this.loggedInUser;
   }
-
+    
   public logout() {
     // Remove token from localStorage
-    localStorage.removeItem('id_token');
-    localStorage.removeItem("accessToken");
+    this.afService.updateUserStatus('offline');
   }
 }
