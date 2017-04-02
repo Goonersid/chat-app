@@ -13,7 +13,7 @@ export class ChatRoomComponent {
   public newMessage: string;
   public messages: FirebaseListObservable<any>;
   public chatbox : any;
-  constructor(public afService: AF) {
+  constructor(public auth:Auth,public afService: AF) {
     this.messages = this.afService.messages;
     
   }
@@ -23,18 +23,12 @@ export class ChatRoomComponent {
     this.user.chatmessage = '';
   }
 
-  isYou(email) {
-    if(email == this.afService.email)
-      return true;
-    else
-      return false;
+  getMessageCls(message) {
+    return message.to==this.afService.email?"chat-receiver":"";
+  } 
+  isSenderOrReceiver(message){
+    return  (message.to==this.afService.email && message.email==this.user.email)||
+                                    (message.email==this.afService.email && message.to==this.user.email )
   }
-  isMe(email) {
-    if(email == this.afService.email)
-      return false;
-    else
-      return true;
-  }
-
 
 }

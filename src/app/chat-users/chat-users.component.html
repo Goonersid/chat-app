@@ -1,19 +1,16 @@
-
-<div class="row" *ngIf="afService.af.auth">
-<div class="col-4">
-<h2>List of users</h2>
-<div *ngFor="let user of users | async">
-
-    </div>
-<div class="list-group" *ngFor="let user of users | async">
-  		<a *ngIf="user.email != currentUser.email"
-  				[ngClass]="processClasses(user)" class="list-group-item list-group-item-action" (click)="onSelect(user)">
+<div class="row chat-users" *ngIf="afService.af.auth">
+<div class ="col-xs-12 col-sm-6 col-md-7 col-lg-8">
+	<chat-room *ngIf="selectedUser" [user]="selectedUser"></chat-room>	
+</div>
+<div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
+<span class="chat-users-header">Friend List</span>
+<div class="list-group border-0" *ngFor="let user of users | async">
+  		<a href="#" *ngIf="user.email != currentUser.email"
+  				[ngClass]="processClasses(user)" class="border-0 list-group-item list-group-item-action" (click)="onSelect(user)">
   				<i class="fa fa-circle" [ngClass]="user.status" aria-hidden="true"></i>&nbsp;&nbsp;{{user.displayName}}
   				<small class="text-muted">&nbsp;-&nbsp;({{user.status}})</small>
   				</a>
 </div>
 </div>
-<div class ="col">
-	<chat-room *ngIf="selectedUser" [user]="selectedUser"></chat-room>	
-</div>
+
 </div>

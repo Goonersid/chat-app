@@ -5,7 +5,6 @@ import { HttpModule, Http, RequestOptions } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { Auth } from './auth.service';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {
   routing,
   appRoutingProviders
@@ -35,7 +34,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     UserProfileComponent,
     ChatUsersComponent,
     ChatRoomComponent
-  ],
+  ], 
   imports: [
     BrowserModule,
     FormsModule,

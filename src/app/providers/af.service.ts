@@ -34,7 +34,7 @@ export class AF {
             status : status
           }).then(results => {
            if(status=="offline"){
-              this.logout();
+              //this.logout();
               localStorage.removeItem('id_token');
               localStorage.removeItem("accessToken");
           }
