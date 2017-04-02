@@ -47,8 +47,6 @@ export class AF {
   });
     return this.users;
   }
-  getUserKey(){
-  }
   checkIfUserExists (email){
       return this.af.database.list('users',{
         query :{
